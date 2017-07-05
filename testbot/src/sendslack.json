@@ -1,0 +1,10 @@
+{
+  "token":"xoxp-204037003492-204039855524-208722377798-58065b0de2f7f21e6a0e2a31b7ddcddc",
+  "channels": [
+    {
+      "name": "chatbot_test",
+      "incoming_webhook_url": "https://hooks.slack.com/services/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",
+      "icon_emoji": ":shipit:"
+    }
+  ]
+}
