@@ -60,8 +60,12 @@ def main():
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v3', http=http)
 
-    results = service.files().list(
+    #results = service.files().list(
+     #   pageSize=10,fields="nextPageToken, files(id, name)").execute()
+
+    results = service.teamdrives().list(
         pageSize=10,fields="nextPageToken, files(id, name)").execute()
+
     items = results.get('files', [])
     if not items:
         print('No files found.')
