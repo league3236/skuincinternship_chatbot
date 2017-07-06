@@ -53,7 +53,7 @@ def alarm_report():
 	sec = now.second;
 	global BL
 	if hour == 17 and min == 55 and BL:
-		payload = {"text": "출석부를 작성하세요!!!"}
+		payload = {"username" : "주간보고서 알림", "text": "*주간 보고서를 작성하세요!!!*\nhttps://career.skuniv.ac.kr/"}
 		url = "https://hooks.slack.com/services/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"
 		req = urllib2.Request(url)
 		req.add_header('Content-Type', 'application/json')
@@ -68,7 +68,7 @@ def slack_answer(txt):
     if txt == EXAMPLE_COMMAND1:
         answer = "안녕하세요! 인턴봇입니다."
     elif txt == EXAMPLE_COMMAND2:
-	payload = {"text": "웹훅 알림!!!"}
+	payload = {"username" : "주간보고서 알림", "text": "*주간 보고서를 작성하세요!!!*\nhttps://career.skuniv.ac.kr/"}
 	url = "https://hooks.slack.com/services/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"
 	req = urllib2.Request(url)
 	req.add_header('Content-Type', 'application/json')
