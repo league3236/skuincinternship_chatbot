@@ -68,7 +68,13 @@ def slack_answer(txt):
     if txt == EXAMPLE_COMMAND1:
         answer = "안녕하세요! 인턴봇입니다."
     elif txt == EXAMPLE_COMMAND2:
-	payload = {"username" : "주간보고서 알림", "text": "*주간 보고서를 작성하세요!!!*\nhttps://career.skuniv.ac.kr/"}
+	payload = {"username" : "주간보고서 알림", "text": "*주간 보고서*", "color" : "#36a64f", 
+		"fields" : [
+			{
+				"title" : "주간보고서 작성 알림",
+				"value" : "주간보고서를 작성하세요!!",
+			}]
+	}
 	url = "https://hooks.slack.com/services/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"
 	req = urllib2.Request(url)
 	req.add_header('Content-Type', 'application/json')
