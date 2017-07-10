@@ -2,6 +2,8 @@ from __future__ import print_function
 import httplib2
 import os
 import io
+import sys
+import re
 
 from googleapiclient.http import *
 from apiclient import discovery
@@ -56,6 +58,16 @@ def main():
     Creates a Google Drive API service object and outputs the names and IDs
     for up to 10 files.
     """
+    #input -> unicode
+    st = '업무'                                    
+    pre = '&#'                                   
+    suf = ';'                                    
+    result = ''                                  
+    for stt in st:                               
+    	if ord(stt) == 32:                       
+        	result += ' '                        
+    	else:                                    
+        	result += (pre + str(ord(stt)) + suf)
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v3', http=http)
@@ -64,8 +76,18 @@ def main():
     #    pageSize=30,fields="nextPageToken, files(id, name)").execute()
     #results = service.files().list(corpora="teamDrive", includeTeamDriveItems=True, supportsTeamDrives=True, teamDriveId="0AElQsZ-ZfPD-Uk9PVA").execute()
     results = service.files().export(fileId="1a1l_QdFvqgtKK0lO3zXeTOjnJwpvfKzs8MQQ55yxs_s", mimeType="text/html").execute(http=http)
-    print(results)
-   
+    # print(results)
+    # search Keywork in Streaming data
+    results = results.decode("utf-8")	# without this line, Printing Error!!
+    p = re.compile((u'<h[0-9] id="(.*?)" |normal">(.+'+result+'.*?)</'), re.UNICODE)
+    findAll = p.findall(results)
+    for i in findAll:                                                     
+          if i[0]:
+              print(i[0])
+          else :
+              j = i[1].split(">")
+              print(j[len(j)-1])
+ 
 if __name__ == '__main__':
     main()
 
