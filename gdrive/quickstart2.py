@@ -4,6 +4,7 @@ import os
 import io
 import sys
 import re
+import html
 
 from googleapiclient.http import *
 from apiclient import discovery
@@ -59,7 +60,7 @@ def main():
     for up to 10 files.
     """
     #input -> unicode
-    st = '업무'                                    
+    st = '문서'                                    
     pre = '&#'                                   
     suf = ';'                                    
     result = ''                                  
@@ -79,14 +80,18 @@ def main():
     # print(results)
     # search Keywork in Streaming data
     results = results.decode("utf-8")	# without this line, Printing Error!!
-    p = re.compile((u'<h[0-9] id="(.*?)" |normal">(.+'+result+'.*?)</'), re.UNICODE)
+    p = re.compile((u'<h[0-9] id="(.*?)"|<span style="color:#\d+;font-weight:\d+;text-decoration:none;vertical-align:baseline;font-size:\d+pt;font-family:&quot;Malgun Gothic&quot;;font-style:normal">(.*?)<\/span>'), re.UNICODE)
     findAll = p.findall(results)
+    content = ''
+    head_id = ''
     for i in findAll:                                                     
           if i[0]:
-              print(i[0])
+              if content and re.search(u''+result, content):
+                 print("URL : " + head_id + "\n" + html.unescape(content) + "\n\n")
+              head_id = i[0]
+              content = ''
           else :
-              j = i[1].split(">")
-              print(j[len(j)-1])
+              content += '\n' + i[1]
  
 if __name__ == '__main__':
     main()
