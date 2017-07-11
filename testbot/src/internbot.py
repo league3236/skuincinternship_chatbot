@@ -129,13 +129,7 @@ def parse_slack(msg):
                 answer = slack_answer(command)
 
                 if answer :
-                    slack_client.api_call(
-                     		"chat.postMessage",
-                     		channel=output['channel'],
-                      		text=answer,
-				username='인턴봇',
-				as_user=True
-                )
+                    post_to_channel(answer)
 
     return None
 
@@ -146,11 +140,7 @@ def alarm_report():
     sec = now.second;
     global BL
     if hour == 17 and min == 55 and BL:
-        payload = {"username" : "주간보고서 알림", "text": "*주간 보고서를 작성하세요!!!*\nhttps://career.skuniv.ac.kr/"}
-        url = "https://hooks.slack.com/services/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"
-        req = urllib2.Request(url)
-        req.add_header('Content-Type', 'application/json')
-        urllib2.urlopen(req, json.dumps(payload))
+        post_to_channel("*주간보고서 알림*\n```주간보고서를 작성하세요!!!```\nhttps://career.skuniv.ac.kr/")
         BL = False
     if hour == 18 and min == 1:
         BL = True
