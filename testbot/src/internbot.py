@@ -51,9 +51,9 @@ def get_credentials():
     Returns:
         Credentials, the obtained credential.
     """
-    home_dir = os.path.expanduser('~')
-    credential_dir = os.path.join(home_dir, '.credentials')
-    if not os.path.exists(credential_dir):
+	home_dir = os.path.expanduser('~')
+	credential_dir = os.path.join(home_dir, '.credentials')
+	if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     credential_path = os.path.join(credential_dir,
                                    'drive-python-quickstart.json')
@@ -77,38 +77,38 @@ def gdrive():
     for up to 10 files.
     """
     #input -> unicode
-    st = '문서'
-    pre = '&#'
-    suf = ';'
-    result = ''
-    for stt in st:
-    	if ord(stt) == 32:
-        	result += ' '
-    	else:
-        	result += (pre + str(ord(stt)) + suf)
-    credentials = get_credentials()
-    http = credentials.authorize(httplib2.Http())
-    service = discovery.build('drive', 'v3', http=http)
+	st = '문서'
+	pre = '&#'
+	suf = ';'
+	result = ''
+	for stt in st:
+		if ord(stt) == 32:
+			result += ' '
+		else:
+    		result += (pre + str(ord(stt)) + suf)
+	credentials = get_credentials()
+	http = credentials.authorize(httplib2.Http())
+	service = discovery.build('drive', 'v3', http=http)
 
     #results = service.files().list(
     #    pageSize=30,fields="nextPageToken, files(id, name)").execute()
     #results = service.files().list(corpora="teamDrive", includeTeamDriveItems=True, supportsTeamDrives=True, teamDriveId="0AElQsZ-ZfPD-Uk9PVA").execute()
-    results = service.files().export(fileId="1a1l_QdFvqgtKK0lO3zXeTOjnJwpvfKzs8MQQ55yxs_s", mimeType="text/html").execute(http=http)
+	results = service.files().export(fileId="1a1l_QdFvqgtKK0lO3zXeTOjnJwpvfKzs8MQQ55yxs_s", mimeType="text/html").execute(http=http)
     # print(results)
     # search Keywork in Streaming data
-    results = results.decode("utf-8")	# without this line, Printing Error!!
-    p = re.compile((u'<h[0-9] id="(.*?)"|<span style="color:#\d+;font-weight:\d+;text-decoration:none;vertical-align:baseline;font-size:\d+pt;font-family:&quot;Malgun Gothic&quot;;font-style:normal">(.*?)<\/span>'), re.UNICODE)
-    findAll = p.findall(results)
-    content = ''
-    head_id = ''
-    for i in findAll:
-          if i[0]:
-              if content and re.search(u''+result, content):
-                 print("URL : " + head_id + "\n" + html.unescape(content) + "\n\n")
-              head_id = i[0]
-              content = ''
-          else :
-              content += '\n' + i[1]
+	results = results.decode("utf-8")	# without this line, Printing Error!!
+	p = re.compile((u'<h[0-9] id="(.*?)"|<span style="color:#\d+;font-weight:\d+;text-decoration:none;vertical-align:baseline;font-size:\d+pt;font-family:&quot;Malgun Gothic&quot;;font-style:normal">(.*?)<\/span>'), re.UNICODE)
+	findAll = p.findall(results)
+	content = ''
+	head_id = ''
+	for i in findAll:
+		if i[0]:
+			if content and re.search(u''+result, content):
+				print("URL : " + head_id + "\n" + html.unescape(content) + "\n\n")
+			head_id = i[0]
+			content = ''
+		else :
+			content += '\n' + i[1]
 
 def parse_slack(msg):
     output_list = msg
@@ -147,7 +147,7 @@ def alarm_report():
 		req.add_header('Content-Type', 'application/json')
 		urllib2.urlopen(req, json.dumps(payload))
 		BL = False
-	if hour == 18 and min == 01:
+	if hour == 18 and min == 1:
 		BL = True
 	return None
 
