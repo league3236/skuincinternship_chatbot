@@ -93,7 +93,7 @@ def gdrive(keyword):
 
         if list :
             for item in list :
-                file_id = item['id']
+                file_id = item['id'].decode('utf-8')
                 results = service.files().export(fileId=file_id,
                                                  mimeType="text/html").execute(http=http)
                 results = results.decode("utf-8")  # without this line, Printing Error!!
@@ -107,7 +107,7 @@ def gdrive(keyword):
                     if i[0]:
                         if content and re.search(u'' + result, content):
                             count += 1
-                            answer = "*•" + str(count) + " 번쨰 검색 결과* // 작성자. _"+item['name']+"_\n" + "```" + html.unescape(
+                            answer = "*•" + str(count) + " 번쨰 검색 결과* // 작성자. _"+item['name'].decode('utf-8')+"_\n" + "```" + html.unescape(
                                 content) + "\n\n" + "[링크] " + "https://docs.google.com/document/d/1a1l_QdFvqgtKK0lO3zXeTOjnJwpvfKzs8MQQ55yxs_s/edit#heading=" + head_id + "```"
                             post_to_channel(answer)
                         head_id = i[0]
