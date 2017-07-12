@@ -57,6 +57,7 @@ def main():
         print('Files:')
         for item in items:
             if item['name'].find('OJT') != -1:
+                item['name'] = item['name'].split(' ')[1]
                 print('{0} ({1})'.format(item['name'].encode('utf-8'), item['id'].encode('utf-8')))
             #request = service.files().get_media(fileId=item['id'])
             #fh = io.FileIO(item['name'], mode='wb')
