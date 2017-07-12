@@ -119,7 +119,6 @@ def gdrive(keyword):
 
 def parse_slack(msg):
     output_list = msg
-    print(output_list)
     if output_list and len(output_list) > 0:
         for output in output_list:
             if output and 'text' in output and 'BOT_ID' not in output:
