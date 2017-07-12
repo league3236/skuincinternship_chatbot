@@ -100,8 +100,8 @@ def parse_slack(msg):
     if output_list and len(output_list) > 0:
         for output in output_list:
             if output and 'text' in output and 'BOT_ID' not in output:
-                command = output['text']
-                answer = slack_answer(command)
+                command = output['text']    # Get text in JSON
+                answer = slack_answer(command)    # Go to desk
                 if answer :
                     post_to_channel(answer)
     return None
@@ -120,7 +120,7 @@ def alarm_report():
     return None
 
 
-def slack_answer(txt):
+def slack_answer(txt):    # Have Condition
     if txt == EXAMPLE_COMMAND1:
         answer = "안녕하세요! 인턴봇입니다."
     elif txt == EXAMPLE_COMMAND2:
