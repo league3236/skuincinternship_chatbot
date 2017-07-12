@@ -63,8 +63,10 @@ def get_credentials():
     return credentials
 
 def gdrive(keyword):
+    post_to_channel('검색을 시작합니다... 잠시만 기다려주세요 :)')
     count = 0
-    result = html.escape(keyword)
+    result = convert_keyword_unicode(html.unescape(keyword))
+    print(result)
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v3', http=http)
@@ -100,15 +102,14 @@ def gdrive(keyword):
                         if content and re.search(u'' + result, content):
                             count += 1
                             answer = "*•" + str(count) + " 번쨰 검색 결과* // 작성자. _"+item['name'].decode('utf-8')+"_\n" + "```" + html.unescape(
-                                content) + "\n\n" + "[링크] " + "https://docs.google.com/document/d/1a1l_QdFvqgtKK0lO3zXeTOjnJwpvfKzs8MQQ55yxs_s/edit#heading=" + head_id + "```"
+                                content) + "\n\n" + "[링크] " + "https://docs.google.com/document/d/"+file_id+"/edit#heading=" + head_id + "```"
                             post_to_channel(answer)
                         head_id = i[0]
                         content = ''
                     else:
                         content += '\n' + i[1]
 
-    if count != 0 :
-        post_to_channel('총 '+str(count)+'개의 검색 결과를 찾았습니다.')
+    post_to_channel('총 '+str(count)+'개의 검색 결과를 찾았습니다.')
 
 def convert_keyword_unicode(kword):
     pre = '&#'
@@ -120,6 +121,7 @@ def convert_keyword_unicode(kword):
             result += (pre + str(ord(stt)) + suf)
         else:
             result += html.escape(stt)
+    return result
 
 def parse_slack(msg):
     output_list = msg
@@ -153,6 +155,10 @@ def slack_answer(txt):    # Have Condition
         post_to_channel('*알림알림*');
         return None
     elif txt.find(OJT_COMMAND) != -1:
+        cmd = txt[7:]
+        if len(cmd) < 2 or re.search('[ㄱ-ㅎ]|[ㅏ-ㅣ]', cmd) or re.search('[`~!@#$%^&*_=+;:",./<>?]', cmd) or cmd.find('-') != -1 or cmd.find('\'') != -1 or cmd.find('[') != -1 or cmd.find(']') != -1 or cmd.find('{') != -1 or cmd.find('}') != -1 or cmd.find('(') != -1 or cmd.find(')') != -1 or cmd.find('|') != -1 or cmd.find('\\') != -1:
+            post_to_channel('*검색 키워드는 두 글자 이상의 특수 문자가 포함되지 않은 단어만 가능합니다.*')
+            return None
         gdrive(txt[7:])
         return None
     else:
