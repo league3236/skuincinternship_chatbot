@@ -111,15 +111,15 @@ def gdrive(keyword):
         post_to_channel('총 '+str(count)+'개의 검색 결과를 찾았습니다.')
 
 def convert_keyword_unicode(kword):
-    st = kword
     pre = '&#'
     suf = ';'
     result = ''
-    for stt in st:
-        if ord(stt) == 32:
-            result += ' '
-        else:
+    pattern = r'[가-힣]+'
+    for stt in kword:
+        if re.search(pattern, stt):
             result += (pre + str(ord(stt)) + suf)
+        else:
+            result += html.escape(stt)
 
 def parse_slack(msg):
     output_list = msg
