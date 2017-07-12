@@ -63,6 +63,7 @@ def get_credentials():
     return credentials
 
 def gdrive(keyword):
+    count = 0
     st = keyword
     pre = '&#'
     suf = ';'
@@ -75,24 +76,46 @@ def gdrive(keyword):
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v3', http=http)
-    results = service.files().export(fileId="1a1l_QdFvqgtKK0lO3zXeTOjnJwpvfKzs8MQQ55yxs_s", mimeType="text/html").execute(http=http)
-    results = results.decode("utf-8")	# without this line, Printing Error!!
-    p = re.compile((u'<h[0-9] id="(.*?)"|<span style="color:#\d+;font-weight:\d+;text-decoration:none;vertical-align:baseline;font-size:\d+pt;font-family:&quot;Malgun Gothic&quot;;font-style:normal">(.*?)<\/span>'), re.UNICODE)
-    findAll = p.findall(results)
-    content = ''
-    head_id = ''
-    count = 0
-    for i in findAll:
-        if i[0]:
-            if content and re.search(u''+result, content):
-                count += 1
-                answer = "*•"+str(count)+"번쨰 검색 결과*\n"+"```"+html.unescape(content)+"\n"+"[링크] "+"https://docs.google.com/document/d/1a1l_QdFvqgtKK0lO3zXeTOjnJwpvfKzs8MQQ55yxs_s/edit#heading="+head_id+"```"
-                post_to_channel(answer)
-            head_id = i[0]
-            content = ''
-        else :
-            content += '\n' + i[1]
-    post_to_channel('총 '+str(count)+'개의 검색 결과를 찾았습니다.')
+    # Get List['name', 'OJT file id'] in Teamdrive
+    results = service.files().list(corpora="teamDrive", includeTeamDriveItems=True, supportsTeamDrives=True, teamDriveId="0AElQsZ-ZfPD-Uk9PVA").execute()
+    items = results.get('files', [])
+    if not items:
+        print('No files found.')
+    else:
+        print('Files:')
+        list = []
+        for item in items:
+            if item['name'].find('OJT') != -1:
+                item['name'] = item['name'].split(' ')[0].encode('utf-8')
+                item['id'] = item['id'].encode('utf-8')
+                map = {'name' : item['name'], 'id' : item['id']}
+                list.append(map)
+
+        if list :
+            for item in list :
+                results = service.files().export(fileId=item['id'],
+                                                 mimeType="text/html").execute(http=http)
+                results = results.decode("utf-8")  # without this line, Printing Error!!
+                p = re.compile((
+                    u'<h[0-9] id="(.*?)"|<span style="color:#\d+;font-weight:\d+;text-decoration:none;vertical-align:baseline;font-size:\d+pt;font-family:&quot;Malgun Gothic&quot;;font-style:normal">(.*?)<\/span>'),
+                    re.UNICODE)
+                findAll = p.findall(results)
+                content = ''
+                head_id = ''
+                for i in findAll:
+                    if i[0]:
+                        if content and re.search(u'' + result, content):
+                            count += 1
+                            answer = "*•" + str(count) + " 번쨰 검색 결과* // 작성자. _"+item['name']+"_\n" + "```" + html.unescape(
+                                content) + "\n\n" + "[링크] " + "https://docs.google.com/document/d/1a1l_QdFvqgtKK0lO3zXeTOjnJwpvfKzs8MQQ55yxs_s/edit#heading=" + head_id + "```"
+                            post_to_channel(answer)
+                        head_id = i[0]
+                        content = ''
+                    else:
+                        content += '\n' + i[1]
+
+    if count != 0 :
+        post_to_channel('총 '+str(count)+'개의 검색 결과를 찾았습니다.')
 
 def parse_slack(msg):
     output_list = msg

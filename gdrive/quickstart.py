@@ -46,9 +46,6 @@ def main():
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v3', http=http)
-
-    #results = service.files().list(
-    #    pageSize=30,fields="nextPageToken, files(id, name)").execute()
     results = service.files().list(corpora="teamDrive", includeTeamDriveItems=True, supportsTeamDrives=True, teamDriveId="0AElQsZ-ZfPD-Uk9PVA").execute()
     items = results.get('files', [])
     if not items:
@@ -62,8 +59,6 @@ def main():
                 item['id'] = item['id'].encode('utf-8')
                 map = {'name' : item['name'], 'id' : item['id']}
                 list.append(map)
-        for item in list :
-            print('{0} ({1})'.format(item['name'], item['id']))
                 #print('{0} ({1})'.format(item['name'], item['id']))
             #request = service.files().get_media(fileId=item['id'])
             #fh = io.FileIO(item['name'], mode='wb')
