@@ -64,15 +64,7 @@ def get_credentials():
 
 def gdrive(keyword):
     count = 0
-    st = keyword
-    pre = '&#'
-    suf = ';'
-    result = ''
-    for stt in st:
-        if ord(stt) == 32:
-            result += ' '
-        else:
-            result += (pre + str(ord(stt)) + suf)
+    result = html.escape(keyword)
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v3', http=http)
@@ -117,6 +109,17 @@ def gdrive(keyword):
 
     if count != 0 :
         post_to_channel('총 '+str(count)+'개의 검색 결과를 찾았습니다.')
+
+def convert_keyword_unicode(kword):
+    st = kword
+    pre = '&#'
+    suf = ';'
+    result = ''
+    for stt in st:
+        if ord(stt) == 32:
+            result += ' '
+        else:
+            result += (pre + str(ord(stt)) + suf)
 
 def parse_slack(msg):
     output_list = msg
