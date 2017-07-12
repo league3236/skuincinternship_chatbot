@@ -93,7 +93,7 @@ def gdrive(keyword):
 
         if list :
             for item in list :
-                results = service.files().export(fileId=item['id'],
+                results = service.files().export(fileId=str(item['id']),
                                                  mimeType="text/html").execute(http=http)
                 results = results.decode("utf-8")  # without this line, Printing Error!!
                 p = re.compile((
