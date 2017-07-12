@@ -58,7 +58,7 @@ def main():
         for item in items:
             if item['name'].find('OJT') != -1:
                 item['name'] = item['name'].split(' ')[0]
-                print('{0} ({1})'.format(item['name'].encode('utf-8'), item['id'].encode('utf-8')))
+                print('{0} ({1})'.format(item['name'], item['id']))
             #request = service.files().get_media(fileId=item['id'])
             #fh = io.FileIO(item['name'], mode='wb')
             #downloader = MediaIoBaseDownload(fh, request)
